@@ -7,12 +7,19 @@ Once the container is running, you can use any normal ROS1 commands to build and
 
 Gazebo simulations are also available in this environment, GPUs are currently not supported but can be added by modifying the docker files.
 
+## Setup
+
+Clone this repository to a directory with the package(s) you are developing.
+
+You'll now need to build the docker image. 
+If you have any custom packages that you would like to be built into the image, such as custom URDF for your husky model, you can add them to the `custom_packages` directory and they will be built into the image.
+
+From the `ros1_noetic_husky_dev_env` directory, run the following command to build the docker image: `docker compose build`
+
+
 ## Usage
 
-To use:
-1. Clone this repository to a directory with the package(s) you are developing.
-2. If it's your first time using this environment, build the docker image by running `docker-compose build` from the `ros1_noetic_husky_dev_env` directory.
-3. To start a terminal in the container, run `docker-compose run dev_env`.
+After building the image, you can run the development environment with the following command: `docker-compose run dev_env`
 
 ### Tips
 
@@ -21,15 +28,14 @@ If your development requires multiple terminals, you can run `docker-compose run
 The intended project structure is as follows:
 
 ```bash
+.
 ├── ros1_noetic_husky_dev_env
+│   ├── custom_packages
 │   ├── docker-compose.yaml
 │   ├── Dockerfile.ros1_noetic_gazebo_husky_dev
 │   ├── LICENSE
 │   └── README.md
 └── some_ros1_pkg
-    ├── CMakeLists.txt
-    ├── package.xml
-    └── ...
 ...
 ```
 

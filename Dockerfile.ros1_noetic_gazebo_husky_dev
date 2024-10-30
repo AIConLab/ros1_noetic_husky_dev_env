@@ -26,8 +26,10 @@ ENV ROS_DISTRO noetic
 ENV LIBGL_ALWAYS_SOFTWARE 1
 ENV DISPLAY=:0
 
-# Make the workspace
+# Make a temporary directory for the catkin workspace
 RUN mkdir -p /root/catkin_ws/src
+
+
 
 
 # Set the script as the entry point
