@@ -1,6 +1,11 @@
 # Use the official ROS Noetic image as the base
 FROM osrf/ros:noetic-desktop-focal
 
+# Set up environment variables
+ENV ROS_DISTRO noetic
+ENV LIBGL_ALWAYS_SOFTWARE 1
+ENV DISPLAY=:0
+
 # Install RViz and necessary packages for software rendering and debugging
 RUN apt-get update && apt-get install -y \
     ros-${ROS_DISTRO}-rviz \
@@ -8,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     ros-${ROS_DISTRO}-teleop-twist-keyboard \
     ros-${ROS_DISTRO}-husky-* \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+    python3-wstool \
+    python3-rosdep \
     libgl1-mesa-dri \
     libglvnd0 \
     libgl1 \
@@ -21,16 +28,4 @@ RUN apt-get update && apt-get install -y \
     iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set up environment variables
-ENV ROS_DISTRO noetic
-ENV LIBGL_ALWAYS_SOFTWARE 1
-ENV DISPLAY=:0
-
-# Make a temporary directory for the catkin workspace
-RUN mkdir -p /root/catkin_ws/src
-
-
-
-
-# Set the script as the entry point
 CMD ["bash"]

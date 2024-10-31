@@ -10,12 +10,7 @@ Gazebo simulations are also available in this environment, GPUs are currently no
 ## Setup
 
 Clone this repository to a directory with the package(s) you are developing.
-
-You'll now need to build the docker image. 
-If you have any custom packages that you would like to be built into the image, such as custom URDF for your husky model, you can add them to the `custom_packages` directory and they will be built into the image.
-
-From the `ros1_noetic_husky_dev_env` directory, run the following command to build the docker image: `docker compose build`
-
+In the directory with the packages, create a directory called `some_name_ws` where `some_name` is the name of your workspace.
 
 ## Usage
 
@@ -29,14 +24,26 @@ The intended project structure is as follows:
 
 ```bash
 .
+├── husky_dev_ws
 ├── ros1_noetic_husky_dev_env
-│   ├── custom_packages
 │   ├── docker-compose.yaml
 │   ├── Dockerfile.ros1_noetic_gazebo_husky_dev
 │   ├── LICENSE
 │   └── README.md
-└── some_ros1_pkg
+└── src
+    ├── some_ros1_pkg
+    └── utsan06_husky
 ...
+
+```
+
+To have a persistent workspace you can mount the workspace directory to the container. This can be done by adding the following line to the `docker-compose.yaml` file:
+
+```yaml
+volumes:
+  - ../some_ws:/root/some_ws
+  - ../src/:/root/some_ws/src/extern_pkgs
+
 ```
 
 If you're going to be running a GUI or Gazbeo simulation, you'll need to allow X11 forwarding. On Linux, you can run `xhost +local:root` to allow the container to connect to your X server. 

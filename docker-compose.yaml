@@ -1,19 +1,23 @@
 version: '3'
 
 services:
-  connect_to_ros_noetic_remote_master:
-    build: .
-    image: ros_noetic_remote_master
+  husky_dev_env:
+    build:
+      context: .
+      dockerfile: Dockerfile.ros1_noetic_gazebo_husky_dev
+    image: ros1_noetic_husky_dev
     network_mode: host
     environment:
       - DISPLAY=:0
-      - ROBOT_HOSTNAME=${ROBOT_HOSTNAME}
-      - ROBOT_IP=${ROBOT_IP}
-      - ROS_MASTER_URI=http://${ROBOT_IP}:11311
       - QT_X11_NO_MITSHM=1
       - LIBGL_ALWAYS_SOFTWARE=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${HOME}/.Xauthority:/root/.Xauthority
+      # Mount the workspace for development
+      - ../husky_dev_ws:/husky_dev_ws
+      - ../src:/husky_dev_ws/src/extern_pkgs
     stdin_open: true
     tty: true
+    working_dir: /husky_dev_ws
+    command: ["bash"]
