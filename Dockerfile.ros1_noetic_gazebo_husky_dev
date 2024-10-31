@@ -1,20 +1,33 @@
 # Use the official ROS Noetic image as the base
-FROM osrf/ros:noetic-desktop-focal
+FROM osrf/ros:noetic-desktop-full
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Set up environment variables
 ENV ROS_DISTRO noetic
-ENV LIBGL_ALWAYS_SOFTWARE 1
-ENV DISPLAY=:0
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
-# Install RViz and necessary packages for software rendering and debugging
 RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg2 \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y \
+    bash-completion \
     ros-${ROS_DISTRO}-rviz \
     ros-${ROS_DISTRO}-image-transport-plugins \
     ros-${ROS_DISTRO}-teleop-twist-keyboard \
     ros-${ROS_DISTRO}-husky-* \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+    ros-${ROS_DISTRO}-moveit-* \
+    ros-${ROS_DISTRO}-industrial-* \
+    ros-${ROS_DISTRO}-ur-* \
     python3-wstool \
     python3-rosdep \
+    python3-rosinstall \
+    python3-rosinstall-generator \
     libgl1-mesa-dri \
     libglvnd0 \
     libgl1 \
@@ -26,6 +39,16 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     net-tools \
     iproute2 \
+    git \
+    wget \
     && rm -rf /var/lib/apt/lists/*
+
+
+# Setup environment
+RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /root/.bashrc
+
+# Source ROS environment in every new shell
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT ["/bin/bash", "-c", "source /opt/ros/${ROS_DISTRO}/setup.bash && exec bash"]
 
 CMD ["bash"]
